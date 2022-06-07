@@ -1,10 +1,13 @@
 import { Add, Remove } from "@material-ui/icons"
+import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import styled from "styled-components"
 import Announcement from "../components/Announcement"
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import Newsletter from '../components/Newsletter'
 import { mobile } from "../responsive"
+import { publicRequest } from "../requestMethods"
 
 
 const Container = styled.div`
@@ -76,28 +79,46 @@ const Button = styled.button`
 
 
 const Product = () => {
+    const location = useLocation()
+    const id = location.pathname.split("/")[2]
+    const [product, setProduct] = useState({})
+    const [quantity, setQuantity] = useState(1)
+
+    useEffect(()=>{
+        const getProduct = async ()=>{
+            try{
+                const res = await publicRequest.get("/products/find/" + id)
+                setProduct(res.data)
+            }catch{}
+        }
+        getProduct()
+    }, [id])
+
+    const handleQuantity = (type) =>{
+        if(type === "dec"){
+            quantity > 1 && setQuantity(quantity - 1)
+        } else{
+            setQuantity(quantity + 1)
+        }
+    }
+
   return (
     <Container>
         <Navbar/>
         <Announcement/>
         <Wrapper>
             <ImgContainer>
-                <Image src = "https://i.postimg.cc/T29jmJn1/IMG-6986-1.jpg"/>
+                <Image src ={product.img}/>
             </ImgContainer>
             <InfoContainer>
-                <Title>Thinking of you box</Title>
-                <Desc>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                    Expedita ullam inventore modi aliquid, aut cum odio aperiam? 
-                    Eaque, eveniet animi. Quidem iste quasi atque architecto autem 
-                    ipsam a consectetur commodi.
-                </Desc>
-                <Price>$40</Price>
+                <Title>{product.title}</Title>
+                <Desc>{product.desc}</Desc>
+                <Price>{product.price}</Price>
                 <AddContainer>
                     <AmountContainer>
-                        <Remove/>
-                        <Amount>1</Amount>
-                        <Add/>
+                        <Remove onClick ={()=>handleQuantity("dec")}/>
+                        <Amount>{quantity}</Amount>
+                        <Add onClick ={()=>handleQuantity("inc")}/>
                     </AmountContainer>
                     <Button>ADD TO CART</Button>
                 </AddContainer>
