@@ -1,4 +1,5 @@
-import { Add, Remove } from '@material-ui/icons'
+import { Add, Remove, Satellite } from '@material-ui/icons'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
@@ -138,6 +139,7 @@ const Button = styled.button`
 
 
 const Cart = () => {
+    const cart = useSelector(state => state.cart)
   return (
     <Container>
         <Navbar/>
@@ -154,47 +156,34 @@ const Cart = () => {
             </Top>
             <Bottom>
                 <Info>
-                    <Product>
+
+                   {cart.products.map(product=>(
+                       <Product>
                         <ProductDetail>
-                            <Image src="https://i.postimg.cc/m247b428/Screenshot-2022-05-19-120448.png"/>
+                            <Image src={product.img}/>
                             <Details>
-                                <ProductName><b>Product:</b> HOUSE-WARMING BOX</ProductName>
-                                <ProductId><b>ID:</b> 9293472342</ProductId>
+                                <ProductName><b>Product:</b>{product.title}</ProductName>
+                                <ProductId><b>ID:</b>{product._id}</ProductId>
                             </Details>
                         </ProductDetail>
                         <PriceDetail>
                             <ProductAmountContainer>
                                 <Add/>
-                                <ProductAmount>1</ProductAmount>
+                                <ProductAmount>{product.quantity}</ProductAmount>
                                 <Remove/>
                             </ProductAmountContainer>
-                            <ProductPrice>$40</ProductPrice>
+                            <ProductPrice>${product.price * product.quantity}</ProductPrice>
                         </PriceDetail>
                     </Product>
+                    ))}
+
                     <Hr/>
-                    <Product>
-                        <ProductDetail>
-                            <Image src="https://i.postimg.cc/T29jmJn1/IMG-6986-1.jpg"/>
-                            <Details>
-                                <ProductName><b>Product:</b> THINKING OF YOU BOX</ProductName>
-                                <ProductId><b>ID:</b> 7935837373</ProductId>
-                            </Details>
-                        </ProductDetail>
-                        <PriceDetail>
-                            <ProductAmountContainer>
-                                <Add/>
-                                <ProductAmount>1</ProductAmount>
-                                <Remove/>
-                            </ProductAmountContainer>
-                            <ProductPrice>$40</ProductPrice>
-                        </PriceDetail>
-                    </Product>
                 </Info>
                 <Summary>
                     <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                     <SummaryItem>
                         <SummaryItemText>Subtotal</SummaryItemText>
-                        <SummaryItemPrice>$ 40</SummaryItemPrice>
+                        <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
                     </SummaryItem>
                     <SummaryItem>
                         <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -206,7 +195,7 @@ const Cart = () => {
                     </SummaryItem>
                     <SummaryItem type="total">
                         <SummaryItemText>Total</SummaryItemText>
-                        <SummaryItemPrice>$ 40</SummaryItemPrice>
+                        <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
                     </SummaryItem>
                     <Button>CHECKOUT NOW</Button>
                 </Summary>
