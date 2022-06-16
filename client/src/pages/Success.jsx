@@ -7,7 +7,7 @@ const Success = () => {
   const location = useLocation();
   const data = location.state.stripeData;
   const cart = location.state.cart;
-  const currentUser = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
