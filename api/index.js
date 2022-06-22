@@ -11,7 +11,7 @@ const orderRoute = require("./routes/order")
 const stripeRoute = require("./routes/stripe")
 const cors = require("cors")
 
-//hello there!
+//hello therr!
 
 dotenv.config()
 
